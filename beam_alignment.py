@@ -1,3 +1,11 @@
+##########################################################
+#
+# tool to help align a beam expander as described here:
+#
+# http://www.uslasercorp.com/envoy/diverge.html
+#
+##########################################################
+
 import numpy as np
 import matplotlib as mpl
 import matplotlib.pyplot as plt
@@ -10,12 +18,14 @@ mpl.use("MacOSX")
 
 CAMERA_NUM = 0
 
+
 def circle(x0,y0,r,num_points=1000):
     theta = np.arange(0,2*np.pi, 2*np.pi/num_points)
     x = r * np.cos(theta) + x0
     y = r * np.sin(theta) + y0
 
     return x,y
+
 
 def analyze_beam(frame):
 
@@ -33,12 +43,7 @@ if __name__ == "__main__":
     frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     H,W = frame.shape
 
-    try:
-        assert ret, "Error initializing camera"
-    except:
-        cap.release()
-        raise
-
+    assert ret, "Error initializing camera"
 
     # initialize data
     L = 200
@@ -54,7 +59,6 @@ if __name__ == "__main__":
 
     fig.subplots_adjust(hspace=0.0)
     fig.suptitle("Testing")
-
 
     ax = list()
     ax.append(plt.subplot(gs[0,:]))
