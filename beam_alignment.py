@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 ##########################################################
 #
 # tool to help align a beam expander as described here:
@@ -14,9 +15,9 @@ import cv2
 from skimage.feature import canny
 from skimage import color
 
-mpl.use("MacOSX")
+# mpl.use("MacOSX")
 
-CAMERA_NUM = 0
+CAMERA_NUM = 1
 
 
 def circle(x0,y0,r,num_points=1000):
