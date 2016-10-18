@@ -6,18 +6,23 @@
 # http://www.uslasercorp.com/envoy/diverge.html
 #
 ##########################################################
+import platform
+import matplotlib as mpl
+if platform.system() == "Darwin":
+    mpl.use("MacOSX")
+else:
+    mpl.use("wx")
+
 
 import numpy as np
-import matplotlib as mpl
 import matplotlib.pyplot as plt
 import cv2
-
 from skimage.feature import canny
 from skimage import color
 
-# mpl.use("MacOSX")
 
-CAMERA_NUM = 1
+OPENCV = False
+CAMERA_NUM = 0
 
 
 def circle(x0,y0,r,num_points=1000):
@@ -36,15 +41,33 @@ def analyze_beam(frame):
 
     return X,Y,D
 
+def open_camera():
+    cap = None
+
+    if OPENCV:
+        cap = cv2.VideoCapture(CAMERA_NUM)
+
+    return cap
+
+def get_frame(camera):
+    if OPENCV:
+        ret, frame = cap.read()
+        assert ret, "Error getting camera frame"
+        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+
+    else:
+        frame = np.random.randint(0,255, size=(100,100), dtype=np.uint8)
+
+    return frame
+
 if __name__ == "__main__":
 
     # set up camera input
-    cap = cv2.VideoCapture(CAMERA_NUM)
-    ret, frame = cap.read()
-    frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-    H,W = frame.shape
 
-    assert ret, "Error initializing camera"
+    cam = open_camera()
+    frame = get_frame(cam)
+
+    H,W = frame.shape
 
     # initialize data
     L = 200
@@ -91,8 +114,7 @@ if __name__ == "__main__":
 
     while plt.get_fignums():
         # get next frame
-        ret, frame = cap.read()
-        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        frame = get_frame(cam)
 
         # get beam statistics
         X0,Y0,D0 = analyze_beam(frame)
