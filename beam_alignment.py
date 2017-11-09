@@ -173,8 +173,7 @@ if __name__ == "__main__":
                 # get beam statistics
                 X0,Y0,D0 = analyze_beam(im)
 
-
-            except ValueError, TypError:
+            except (ValueError, TypeError):
                 # if the analysis step runs into an error,
                 # just ignore it and use the last result
                 pass
